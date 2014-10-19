@@ -1,8 +1,8 @@
 package chatterbox
 
-import java.lang.Runnable
+abstract class ChatBot(entity: ChatEntity) {
+  entity.name = name
 
-abstract class ChatBot(val in: BotReader, val out: BotWriter) extends Runnable {
   def name: String = this.getClass.getSimpleName
-  def read(in: String)
+  def query(in: String)
 }

@@ -12,6 +12,7 @@ object Console {
     val White = Color(37)
     val Green = Color(32)
     val Blue  = Color(36)
+    val Gray  = Color(37)
   }
 
   def color(s: String, color: Color): String = {

@@ -1,11 +1,10 @@
 package chatterbox
 
-class HiBot(out: BotWriter) extends ChatBot(out) {
+class HiBot(entity: ChatEntity) extends ChatBot(entity) {
 
   object CMatch {
-	  def isH(c: Char) = c == 'h' || c == 'H'
-  	def isI(c: Char) = c == 'i' || c == 'I'
-    def isSp(c: Char) = c == ' '
+	  def isH(c: Char) = c.toLower == 'h'
+    def isI(c: Char) = c.toLower == 'i'
     def isWord(c: Char) = c.isLetterOrDigit
 	  def isBO(c: Char) = c == BO
     val BO = '\0'
@@ -13,27 +12,26 @@ class HiBot(out: BotWriter) extends ChatBot(out) {
   
   object ParseState extends Enumeration {
     type ParseState = Value
-    val Intro, FindH, FindI, FoundHi, AfterHi, InWord, NullChar = Value
+    val Start, FindH, FindI, FoundHi, AfterHi, InWord, NullChar = Value
   }
   
   import ParseState._
   
-  def read(in: String) {
-    val it   = in.iterator
-    def next = if (it.hasNext) it.next else CMatch.BO
+  def query(input: String) {
+    val it = input.iterator
+    var state: ParseState = Start
     
-    var state : ParseState = Intro
-    var c = next
-    
-    while (!CMatch.isBO(c)) {
+    while (it.hasNext) {
+      val c = it.next
+
       state = state match {
-        case Intro => {
+        case Start => {
           if (CMatch.isH(c))
             FindI
-          else if (CMatch.isSp(c))
-            FindH
           else if (CMatch.isBO(c))
             NullChar
+          else if (!CMatch.isWord(c))
+            FindH
           else
             InWord
         }
@@ -67,15 +65,13 @@ class HiBot(out: BotWriter) extends ChatBot(out) {
         }
         case AfterHi => AfterHi
       }
-     
-      c = next
     }
    
     // check for acceptance states
     if (state == FoundHi || state == AfterHi) {
-      out.println("hello", name)
+      entity.say("hello")
     }
 
   }
-    
+ 
 }
