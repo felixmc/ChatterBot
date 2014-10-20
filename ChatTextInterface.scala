@@ -5,7 +5,7 @@ import java.io.InputStream
 import java.io.PrintStream
 import java.util.Scanner
 
-class ChatTextInterface(in: InputStream, out: PrintStream) extends ChatInterface {
+class ChatTextInterface(in: InputStream, out: PrintStream, printDebug: Boolean = false) extends ChatInterface {
 
   class ConsoleEntity(n: String, color: Console.Color = Console.Colors.White) extends ChatEntity(n) {
    
@@ -28,6 +28,8 @@ class ChatTextInterface(in: InputStream, out: PrintStream) extends ChatInterface
         out.println(s)
     }
 
+    override def debug(s: String) = if (printDebug) debugE.say(s) else {}
+
     def prompt() = {
       val padding = " " * (List(human, bot, system).map(x => x.name.length).max - name.length)
       out.print(s" $padding$label: ")
@@ -41,6 +43,7 @@ class ChatTextInterface(in: InputStream, out: PrintStream) extends ChatInterface
   val human  = new ConsoleEntity("You", Console.Colors.Blue)
   val bot    = new ConsoleEntity("Bot", Console.Colors.Red)
   val system = new ConsoleEntity("System", Console.Colors.Green)
+  val debugE = new ConsoleEntity("Debug", Console.Colors.Orange)
 
   bot.slowPrint     = true
   system.slowPrint  = true

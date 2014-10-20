@@ -10,5 +10,6 @@ trait ChatInterface {
 
 abstract class ChatEntity(var name: String = "Entity") {
   def say(s: String)
+  def debug(s: String) = {}
   def label: String
 }

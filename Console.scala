@@ -8,11 +8,12 @@ object Console {
   }
 
   object Colors {
-    val Red   = Color(31)
-    val White = Color(37)
-    val Green = Color(32)
-    val Blue  = Color(36)
-    val Gray  = Color(37)
+    val Red    = Color(31)
+    val White  = Color(37)
+    val Green  = Color(32)
+    val Blue   = Color(36)
+    val Gray   = Color(37)
+    val Orange = Color(33)
   }
 
   def color(s: String, color: Color): String = {
