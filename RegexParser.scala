@@ -4,7 +4,7 @@ object RegexParser {
 
   object CMatch {
     def isStar(c: Char)   = c == '*'
-    def isAlph(c: Char) = c.isLetterOrDigit || c == ' '
+    def isAlph(c: Char)   = c.isLetterOrDigit || c == ' '
     def isUnion(c: Char)  = c == '+'
   }
 

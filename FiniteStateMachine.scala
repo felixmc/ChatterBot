@@ -1,21 +1,38 @@
 package chatterbox
 
-abstract class FiniteStateMachine {
+import scala.collection.mutable.Map
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Set
+import scala.collection.mutable.HashSet
 
-  val startState: State
+class FiniteStateMachine(start: Node = new Node()) {
+  val entryNode: Node = start
+  val accepted: Set[Node] = new HashSet()
 
-  def process(s: String): State = {
-    var state = startState
+  accepted.add(entryNode)
 
-    for (c <- s) {
-      state = state.transition(c)
+  def process(s: String): Node = process(s.iterator)
+
+  def process(s: Iterator[Char]): Node = {
+    var state = entryNode
+    
+    while (s.hasNext) {
+      state = state.process(s.next)
     }
-
+    
     return state
   }
 
+  def matches(s: String): Boolean = accepted.contains(process(s))
 }
 
-class State(val transitions: scala.collection.mutable.Map[Char, State], val noTransition: State, val isAccepted: Boolean = false, val isBad: Boolean = false) {
-  def transition(c: Char) = transitions.getOrElse(c, noTransition)
+class Node(var default: Node = ErrorNode) {
+  val edges: Map[Char, Node] = new HashMap
+  def process(c: Char): Node = edges.getOrElse(c, default)
+  override def toString(): String = ""
 }
+
+object ErrorNode extends Node {
+  override def process(c: Char) = this
+}
+

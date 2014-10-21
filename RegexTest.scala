@@ -2,11 +2,21 @@ package chatterbox
 
 object RegexTest extends App {
 
-  val s = "('T' + 't') 'h' 'a' 'n' 'k' ('s' + (' ' ' '* 'y' ('o') 'u'))"
-  //val s = "*'a'"
+  val patt = "('T' + 't') 'h' 'a' 'n' 'k' ('s' + (' ' ' '* 'y' 'o' 'u'))"
 
-  val ex = RegexParser.parse(s)
+  val ex = RegexParser.parse(patt)
+  println("regex string: " + patt + "\nregex model: "+ex + "\nregex model.mkStr: " + ex.mkStr)
 
-  println(ex + "\n" + ex.mkStr)
+  val fsm = RegexToFSM.parse(ex)
+  println(fsm.entryNode.edges)
+
+  val input = "Thank  you"
+
+  if (fsm.matches(input)) {
+    println(s"input `$input` matches pattern `$patt`")
+  } else {
+    println(s"input `$input` matches NOT pattern `$patt`")
+  }
+
 
 }

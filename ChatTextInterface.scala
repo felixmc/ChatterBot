@@ -10,7 +10,7 @@ class ChatTextInterface(in: InputStream, out: PrintStream, printDebug: Boolean =
   class ConsoleEntity(n: String, color: Console.Color = Console.Colors.White) extends ChatEntity(n) {
    
     var slowPrint  = false
-    var printSpeed =  (120, 100)
+    var printSpeed =  (120, 50)
 
     private val rand = new Random()
 
