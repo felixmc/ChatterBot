@@ -12,11 +12,11 @@ object RegexToFSM {
       val node = new Node()
       
       left.entryNode.edges.foreach(kv =>  {
-        node.edges += kv
+        node.add(kv)
       })
 
       right.entryNode.edges.foreach(kv => {
-        node.edges += kv
+        node.add(kv)
       })
 
       val fsm = new FiniteStateMachine(node)
@@ -38,7 +38,7 @@ object RegexToFSM {
       val node = new Node()
 
       val fsm = new FiniteStateMachine()
-      fsm.entryNode.edges.put(c, node)
+      fsm.entryNode.add(c, node)
 
       fsm.accepted.clear()
       fsm.accepted.add(node)
@@ -52,7 +52,7 @@ object RegexToFSM {
       
       fsm.accepted.foreach(a => {
         fsm.entryNode.edges.foreach(kv => {
-          a.edges += kv
+          a.add(kv)
         })
       })
 
@@ -74,7 +74,7 @@ object RegexToFSM {
       
       left.accepted.foreach(a => {
         right.entryNode.edges.foreach(kv => {
-          a.edges += kv
+          a.add(kv)
         })
       })
 

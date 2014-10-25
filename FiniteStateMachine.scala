@@ -4,6 +4,7 @@ import scala.collection.mutable.Map
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Set
 import scala.collection.mutable.HashSet
+import scala.collection.mutable.ArrayBuffer
 
 class FiniteStateMachine(start: Node = new Node()) {
   val entryNode: Node = start
@@ -17,7 +18,7 @@ class FiniteStateMachine(start: Node = new Node()) {
     var state = entryNode
     
     while (s.hasNext) {
-      state = state.process(s.next)
+      state = state.get(s.next)
     }
     
     return state
@@ -27,12 +28,30 @@ class FiniteStateMachine(start: Node = new Node()) {
 }
 
 class Node(var default: Node = ErrorNode) {
-  val edges: Map[Char, Node] = new HashMap
-  def process(c: Char): Node = edges.getOrElse(c, default)
+  val edges: Map[Char, List[Node]] = new HashMap
+  val epsilons: ArrayBuffer[Node] = new ArrayBuffer
+
+  def get(c: Char): Node = {
+    val nodes = getAll(c)
+    if (nodes.length == 0) default else nodes.head
+  }
+  
+  def getAll(c: Char): List[Node] = {
+    return edges.getOrElse(c, List())
+  }
+  
+  def add(c: Char, node: Node) {
+    edges.put(c, getAll(c) :+ node)
+  }
+
+  def add(kv: (Char, List[Node])) {
+    edges.put(kv._1, getAll(kv._1) ++ kv._2)
+  }
+  
   override def toString(): String = ""
 }
 
 object ErrorNode extends Node {
-  override def process(c: Char) = this
+  override def get(c: Char) = this
 }
 
