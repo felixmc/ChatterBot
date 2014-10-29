@@ -52,6 +52,14 @@ case class SimpleSentence(noun: NounPhrase, verb: VerbPhrase) extends Sentence {
   def mkStr: String = noun.mkStr + " " + verb.mkStr
 }
 
+case class AddRouteRequest(city1: String, city2: String, distance: Float) extends Sentence {
+  def mkStr: String = city1 + " and " + city2 + " are connected by a" + distance + " km road"
+}
+
+case class FindRouteRequest() extends Sentence {
+  def mkStr: String = "What is the shortest route for those cities"
+}
+
 // case class Question(inter: Interogative, verb1: ComplexVerbPhrase, verb2: ComplexVerbPhrase) extends Sentence {
 //   def mkStr: String = inter.mkStr + " " + verb1.mkStr + " " + verb2.mkStr + "?"
 // }

@@ -3,8 +3,6 @@ package chatterbox
 import scala.collection.mutable.Stack
 import edu.mit.jwi.item._
 
-
-
 class WordIterator(val words: List[String]) {
   private var i = 0
 
@@ -13,13 +11,15 @@ class WordIterator(val words: List[String]) {
   def wordAt(ni: Int) = if (ni < words.length) words(ni) else null 
 
   def peek = wordAt(i)
-  
+  def peek(ni: Int) = wordAt(i + ni)
+
   def next: String = {
     val w = word
     i = i + 1
     return w
   }
 
+  def length  = words.length
   def hasNext = i < words.length
 }
 
@@ -46,7 +46,11 @@ object WordGrammarParser {
     val word = words.word
     //stack.push(word)
 
-    return WordDictionary.guessPOS(word) match {
+    return if (words.peek(1) == "and" && words.peek(3) == "are" && words.peek(4) == "connected" && words.peek(5) == "by" && words.peek(6) == "a" && words.peek(8) == "km" && words.peek(9) == "road" && words.length == 11) {
+      AddRouteRequest(words.peek(0), words.peek(2), words.peek(7).toDouble)
+    } else if (words.peek(0) == "what" && words.peek(1) == "is" && words.peek(2) == "the" && words.peek(3) == "shortest" && words.peek(4) == "route" && words.peek(5) == "for" && words.peek(6) == "those" && words.peek(7) == "cities") {
+      FindRouteRequest()
+    } else WordDictionary.guessPOS(word) match {
       case Greeting() => GreetSentence(GreetingWG(words.next))
       case _ => SimpleSentence(parseNP(words,stack), parseVP(words,stack))
     }

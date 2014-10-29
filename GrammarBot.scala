@@ -3,6 +3,7 @@ package chatterbox
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.Stack
 import scala.collection.mutable.HashSet
+import scala.collection.mutable.HashMap
 import scala.util.Random
 
 class GrammarBot(entity: ChatEntity) extends ChatBot(entity) {
@@ -94,19 +95,38 @@ class GrammarBot(entity: ChatEntity) extends ChatBot(entity) {
     else return reply
   }
 
+  val cities = new HashSet[String]
+  val roads  = new HashMap[HashSet[String], Double]
+
+  def calcRoute(): List[HashSet[String]] = {
+ 
+  }
+
   def query(input: String) {
     val result = WordGrammarParser.parse(input)
-   
     println(" parse tree: "+result) 
-    
-    val reply = getReply(result)
+    println(roads)
+    println(cities)
 
-    if (reply != null) {
-      if (!sent.contains(reply)) {
-        sent += reply
-        entity.say(reply)
+    result match {
+      case AddRouteRequest(c1,c2,d) => {
+        cities ++= (c1, c2)
+        roads += ((new HashSet(c1,c2), d))
+        entity.say("Okay.")
+      }
+      case FindRouteRequest() => entity.say("The shortest route is " + calcRoute())
+      case _ => {
+        val reply = getReply(result)
+
+        if (reply != null) {
+          if (!sent.contains(reply)) {
+            sent += reply
+            entity.say(reply)
+          }
+        }
       }
     }
+
   }
  
 }
