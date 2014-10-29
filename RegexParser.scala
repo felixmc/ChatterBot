@@ -107,5 +107,4 @@ class RegexStringIterator(val s: String) {
   }
   
   def hasNext = peekI < s.length
-
 }

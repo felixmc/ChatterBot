@@ -18,5 +18,8 @@ object RegexTest extends App {
     println(s"input `$input` matches NOT pattern `$patt`")
   }
 
+  println()
+  
+  FSMPrinter.printFSM(fsm)
 
 }
