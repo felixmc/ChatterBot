@@ -52,8 +52,8 @@ case class SimpleSentence(noun: NounPhrase, verb: VerbPhrase) extends Sentence {
   def mkStr: String = noun.mkStr + " " + verb.mkStr
 }
 
-case class AddRouteRequest(city1: String, city2: String, distance: Float) extends Sentence {
-  def mkStr: String = city1 + " and " + city2 + " are connected by a" + distance + " km road"
+case class AddRouteRequest(city1: String, city2: String, distance: Double) extends Sentence {
+  def mkStr: String = city1 + " and " + city2 + " are connected by a " + distance + " km road"
 }
 
 case class FindRouteRequest() extends Sentence {

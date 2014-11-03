@@ -46,9 +46,9 @@ object WordGrammarParser {
     val word = words.word
     //stack.push(word)
 
-    return if (words.peek(1) == "and" && words.peek(3) == "are" && words.peek(4) == "connected" && words.peek(5) == "by" && words.peek(6) == "a" && words.peek(8) == "km" && words.peek(9) == "road" && words.length == 11) {
-      AddRouteRequest(words.peek(0), words.peek(2), words.peek(7).toDouble)
-    } else if (words.peek(0) == "what" && words.peek(1) == "is" && words.peek(2) == "the" && words.peek(3) == "shortest" && words.peek(4) == "route" && words.peek(5) == "for" && words.peek(6) == "those" && words.peek(7) == "cities") {
+    return if (words.peek(1) == "and" && words.peek(3) == "are" && words.peek(4) == "connected" && words.peek(5) == "by" && words.peek(6) == "a" && words.peek(8) == "km" && words.peek(9) == "road" && words.length == 10) {
+      AddRouteRequest(words.peek(0).toLowerCase, words.peek(2).toLowerCase, words.peek(7).toDouble)
+    } else if (words.peek(0) == "what" && words.peek(1) == "is" && words.peek(2) == "the" && words.peek(3) == "shortest" && words.peek(4) == "route" && words.peek(5) == "for" && words.peek(6) == "those" && words.peek(7) == "cities" && words.length == 8) {
       FindRouteRequest()
     } else WordDictionary.guessPOS(word) match {
       case Greeting() => GreetSentence(GreetingWG(words.next))

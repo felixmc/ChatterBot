@@ -96,10 +96,82 @@ class GrammarBot(entity: ChatEntity) extends ChatBot(entity) {
   }
 
   val cities = new HashSet[String]
-  val roads  = new HashMap[HashSet[String], Double]
+  val roads  = new HashSet[Route]
 
-  def calcRoute(): List[HashSet[String]] = {
- 
+  case class Route(city1: String, city2: String) {
+    var dist: Double = 0
+    def contains(city: String): Boolean = city1 == city || city2 == city
+    def other(city: String): String = if (city1 == city) city2 else city1
+  }
+
+  def calcRoute(): List[Route] = {
+    
+    // add single edges to it by default
+    val routes = new HashSet[List[Route]]
+
+    // try start from every city
+    for (city <- cities) {
+      routes ++= traverseRoute(city)
+    }
+
+    // traverse all solutions and find smallest
+    if (routes.isEmpty)
+      return List()
+    else
+      routes.foldLeft[List[Route]](List())((best, path) => {
+        val bestDist = best.foldLeft[Double](0)((sum, route) => route.dist + sum)
+        val pathDist = path.foldLeft[Double](0)((sum, route) => route.dist + sum)
+        if (best.isEmpty || pathDist < bestDist)
+          path
+        else best
+      })
+  }
+
+  def getEdges(city: String): HashSet[Route] = roads.filter(r => {
+    //println("city "+ city + " matches " + r + " => " + r.contains(city))
+    r.contains(city)
+  })
+
+  def pathContains(path: HashSet[Route], city: String) = path.exists(r => r.contains(city))
+
+  def isSolution(path: List[Route]): Boolean = {
+    val foundCities = path.foldLeft(new HashSet[String])((set, r) => {
+      set += r.city1
+      set += r.city2
+    })
+
+    // if has all cities
+    return foundCities.size == cities.size
+  }
+
+  def traverseRoute(city: String, path: List[Route] = List()): HashSet[List[Route]] = {
+
+    // if has all cities
+    if (isSolution(path)) {
+      return new HashSet[List[Route]] += path
+    } else if (city == null) { // if you run out of cities, then give up on solution
+      return null
+    } else { // else attempt
+      //println("\ncity: " + city)
+      val edges = getEdges(city)
+      //println(edges)
+      val solutions = new HashSet[List[Route]]
+      
+      for (edge <- edges) {
+        //println("\tedge: " + edge)
+        if (!path.contains(edge)) {
+           val other = edge.other(city)
+           val newPath = path :+ edge
+
+           val trav = traverseRoute(other, newPath)
+
+           if (trav != null)
+             solutions ++= trav
+        }
+      }
+
+      return solutions
+    }
   }
 
   def query(input: String) {
@@ -110,8 +182,10 @@ class GrammarBot(entity: ChatEntity) extends ChatBot(entity) {
 
     result match {
       case AddRouteRequest(c1,c2,d) => {
-        cities ++= (c1, c2)
-        roads += ((new HashSet(c1,c2), d))
+        cities ++= List(c1, c2)
+        val route = Route(c1,c2)
+        route.dist = d
+        roads += route
         entity.say("Okay.")
       }
       case FindRouteRequest() => entity.say("The shortest route is " + calcRoute())

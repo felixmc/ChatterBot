@@ -20,5 +20,10 @@ object ChatterApp extends App {
   val bot  : ChatBot       = bots.Grammar()//*/bots.Lab5()
   val chat : ChatSession   = new ChatSession(bot, iface)
 
+  //bot.query("A and B are connected by a 3 km road")
+  //bot.query("B and C are connected by a 4 km road")
+  //bot.query("A and C are connected by a 2 km road")
+  //bot.query("what is the shortest route for those cities")
+
   chat.start()
 }
